@@ -1,17 +1,17 @@
 {
-    "name": "nodejs-typescript-boilerplate",
+    "name": "erc20-arbitrage",
     "version": "1.0.1",
-    "description": "nodejs-typescript-boilerplate",
+    "description": "erc20-arbitrage",
     "main": "./dist/src/index.js",
     "types": "./dist/src/index.d.ts",
     "repository": {
         "type": "git",
-        "url": "https://github.com/sweatpotato13/nodejs-typescript-boilerplate.git"
+        "url": "https://github.com/sweatpotato13/erc20-arbitrage.git"
     },
     "bugs": {
-        "url": "https://github.com/sweatpotato13/nodejs-typescript-boilerplate/issues"
+        "url": "https://github.com/sweatpotato13/erc20-arbitrage/issues"
     },
-    "homepage": "https://github.com/sweatpotato13/nodejs-typescript-boilerplate",
+    "homepage": "https://github.com/sweatpotato13/erc20-arbitrage",
     "files": [
         "dist"
     ],
@@ -81,5 +81,13 @@
             "/dist/"
         ]
     },
-    "packageManager": "yarn@3.1.1"
+    "packageManager": "yarn@3.1.1",
+    "dependencies": {
+        "@truffle/hdwallet-provider": "^2.0.4",
+        "bignumber.js": "^9.0.2",
+        "cross-fetch": "^3.1.5",
+        "dotenv": "^16.0.0",
+        "log4js": "^6.4.4",
+        "web3": "^1.7.1"
+    }
 }
