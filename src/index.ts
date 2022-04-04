@@ -5,6 +5,7 @@ import fetch from "cross-fetch";
 
 import abis from "../abis";
 import addresses from "../addresses";
+import Flashswap from "../build/contracts/Flashswap.json";
 
 
 const web3 = new Web3(
@@ -20,18 +21,26 @@ const uniswapRouter = new web3.eth.Contract(
     addresses.uniswapMainnet.router
 );
 
-const WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
+const flashswap = new web3.eth.Contract(
+    Flashswap.abi,
+    addresses.flashswapRopsten.address
+);
+
+const { address: admin } = web3.eth.accounts.wallet.add(process.env.PRIVATE_KEY);
+
+const WETH = '0xc778417e063141139fce010982780140aa0cd5ab';
 const fromTokens = ['WETH'];
 const fromToken = [
-    '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' // WBNB
+    '0xc778417e063141139fce010982780140aa0cd5ab' // WETH
 ];
 const fromTokenDecimals = [18];
 
-const toTokens = ['SAITAMA'];
+const toTokens = ['BISCUITxx'];
 const toToken = [
-    '0x8b3192f5eebd8579568a2ed41e6feb402f93f73f', // SAITAMA
+    '0xEbfc24130F58e67037c8B3CEfEbC8904aEfF6d2E', // BISCUITxx
 ];
 const toTokenDecimals = [9];
+const toTokenThreshold = [0];
 const amount = process.env.AMOUNT;
 
 async function main() {
@@ -63,7 +72,7 @@ async function main() {
                 const amount0 = await new BigNumber(unit0).shiftedBy(fromTokenDecimals[0]);
                 console.log(`Input amount of ${fromTokens[0]}: ${unit0.toString()}`);
 
-                // The quote currency needs to be WBNB
+                // The quote currency needs to be WETH
                 let tokenIn, tokenOut;
                 if (fromToken[0] === WETH) {
                     tokenIn = fromToken[0];
@@ -75,7 +84,7 @@ async function main() {
                     return;
                 }
 
-                // The quote currency is not WBNB
+                // The quote currency is not WETH
                 if (typeof tokenIn === 'undefined') {
                     return;
                 }
@@ -92,6 +101,25 @@ async function main() {
                 `);
                 const price = parseFloat(unit0.toString()) * ethUsd / parseFloat(unit1.toString());
                 console.log(`${toTokens[j]} price : $${price}`);
+                if (price > toTokenThreshold[j]) {
+                    console.log(`Price is higher than expected. (expected: ${toTokenThreshold[j]})`);
+                    const tx = flashswap.methods.startArbitrage(
+                        tokenIn,
+                        tokenOut,
+                        amount0,
+                        0
+                    )
+                    const data = tx.encodeABI();
+                    const txData = {
+                        gasLimit: web3.utils.toHex(60000),
+                        gasPrice: web3.utils.toHex(5 * 1e9),
+                        from: admin,
+                        to: addresses.flashswapRopsten.address,
+                        data
+                    }
+                    const receipt = await web3.eth.sendTransaction(txData);
+                    console.log(receipt);
+                }
             }
         })
         .on('error', error => {

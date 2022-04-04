@@ -18,6 +18,8 @@
     "scripts": {
         "test": "jest",
         "test:cov": "jest --coverage",
+        "truffle:build": "truffle compile",
+        "start:testnet": "truffle migrate --network mainnet",
         "start:dev": "ts-node-dev --poll --respawn --transpile-only src/index.ts --trace-sync-io",
         "start:prod": "ts-node src/index.ts",
         "lint": "eslint \"{src,test}/**/*.ts\" --fix",
