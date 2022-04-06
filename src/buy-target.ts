@@ -35,12 +35,12 @@ const fromToken = [
 ];
 const fromTokenDecimals = [18];
 
-const toTokens = ['Weenus'];
+const toTokens = ['DAI'];
 const toToken = [
-    '0x101848D5C5bBca18E6b4431eEdF6B95E9ADF82FA', // Weenus
+    '0xaD6D458402F60fD3Bd25163575031ACDce07538D', // Weenus
 ];
-const toTokenDecimals = [9];
-const toTokenThreshold = [0.000000000001377376];
+const toTokenDecimals = [18];
+const toTokenThreshold = [0];
 const amount = process.env.AMOUNT as string;
 
 async function main() {
@@ -121,7 +121,7 @@ async function main() {
                     )
                     const data = tx.encodeABI();
                     const txData = {
-                        gas: gasPrice,
+                        gas: 500000,
                         from: admin,
                         to: addresses.uniswapMainnet.router,
                         data,

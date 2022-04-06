@@ -35,12 +35,12 @@ const fromToken = [
 ];
 const fromTokenDecimals = [18];
 
-const toTokens = ['Weenus'];
+const toTokens = ['DAI'];
 const toToken = [
-    '0x101848D5C5bBca18E6b4431eEdF6B95E9ADF82FA', // Weenus
+    '0xaD6D458402F60fD3Bd25163575031ACDce07538D', // Weenus
 ];
 const toTokenDecimals = [18];
-const toTokenThreshold = [1];
+const toTokenThreshold = [0];
 const amount = process.env.AMOUNT as string;
 
 async function main() {
@@ -79,7 +79,7 @@ async function main() {
 
                 const unit0 = await new BigNumber(amount);
                 const amount0 = await new BigNumber(unit0).shiftedBy(toTokenDecimals[j]);
-                console.log(`Input amount of ${toToken[j]}: ${unit0.toString()}`);
+                console.log(`Input amount of ${toTokens[j]}: ${unit0.toString()}`);
 
                 // The quote currency needs to be WETH
                 let tokenIn, tokenOut;
@@ -109,14 +109,14 @@ async function main() {
                     const deadline = Math.floor(Date.now() / 1000) + 60 * 10;
                     const tx = uniswapRouter.methods.swapExactTokensForETHSupportingFeeOnTransferTokens(
                         amount0,
-                        new BigNumber("0"),
+                        amount1,
                         [toToken[j], WETH],
                         process.env.WALLET_ADDRESS as string,
                         deadline
                     )
                     const data = tx.encodeABI();
                     const txData = {
-                        gasLimit: block.gasLimit,
+                        gasLimit: 150000,
                         gas: gasPrice,
                         from: admin,
                         to: addresses.uniswapMainnet.router,

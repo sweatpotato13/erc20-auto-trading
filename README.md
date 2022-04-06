@@ -1,19 +1,14 @@
-# nodejs-typescript-boilerplate
+# erc20-arbitrage
 
 ## Usage
+* If you want sell your token, you must do `approve` action for these token for router contract
+
 ```sh
-# Run Code
-yarn start:dev
-yarn start:prod
+# development
+yarn sell:dev
+yarn buy:dev
 
-# Run Test
-yarn test
-yarn test:cov
-
-# Linting
-yarn lint
-yarn prettier
-
-# Release (standard-version)
-yarn release
+# production
+yarn sell:prod
+yarn buy:prod
 ```
