@@ -5,7 +5,7 @@ import fetch from "cross-fetch";
 
 import abis from "../abis";
 import addresses from "../addresses";
-import Flashswap from "../build/contracts/Flashswap.json";
+import Swapcontract from "../build/contracts/Swapcontract.json";
 
 
 const web3 = new Web3(
@@ -21,8 +21,8 @@ const uniswapRouter = new web3.eth.Contract(
     addresses.uniswapMainnet.router
 );
 
-const flashswap = new web3.eth.Contract(
-    Flashswap.abi,
+const swapContract = new web3.eth.Contract(
+    Swapcontract.abi,
     addresses.flashswapRopsten.address
 );
 
@@ -37,7 +37,7 @@ const fromTokenDecimals = [18];
 
 const toTokens = ['DAI'];
 const toToken = [
-    '0xaD6D458402F60fD3Bd25163575031ACDce07538D', // Weenus
+    '0xaD6D458402F60fD3Bd25163575031ACDce07538D', // DAI
 ];
 const toTokenDecimals = [18];
 const toTokenThreshold = [0];
@@ -107,19 +107,18 @@ async function main() {
                 if (!flag && price > toTokenThreshold[j]) {
                     console.log(`Price is higher than expected. (expected: ${toTokenThreshold[j]})`);
                     const deadline = Math.floor(Date.now() / 1000) + 60 * 10;
-                    const tx = uniswapRouter.methods.swapExactTokensForETHSupportingFeeOnTransferTokens(
+                    const tx = swapContract.methods.startSwap(
+                        toToken[j],
+                        WETH,
                         amount0,
-                        amount1,
-                        [toToken[j], WETH],
-                        process.env.WALLET_ADDRESS as string,
-                        deadline
+                        amount1
                     )
                     const data = tx.encodeABI();
                     const txData = {
-                        gasLimit: 150000,
+                        gasLimit: 244155,
                         gas: gasPrice,
                         from: admin,
-                        to: addresses.uniswapMainnet.router,
+                        to: addresses.flashswapRopsten.address,
                         data,
                         nonce: nonce,
                     }

@@ -12,8 +12,8 @@ import './interfaces/IUniswapV2Router02.sol';
 
 contract Swapcontract is Ownable {
     using SafeMath for uint;
-    address private constant pancakeRouter = 0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F;
-    address private constant WBNB = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
+    address private constant uniswapRouter = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
+    address private constant WETH = 0xc778417E063141139Fce010982780140Aa0cD5Ab;
 
     constructor() {}
 
@@ -25,22 +25,22 @@ contract Swapcontract is Ownable {
     ) external {
         // transfer input tokens to this contract address
         IERC20(token0).transferFrom(msg.sender, address(this), amount0);
-        // approve pancakeRouter to transfer tokens from this contract
-        IERC20(token0).approve(pancakeRouter, amount0);
+        // approve uniswapRouter to transfer tokens from this contract
+        IERC20(token0).approve(uniswapRouter, amount0);
 
         address[] memory path;
-        if (token0 == WBNB || token1 == WBNB) {
+        if (token0 == WETH || token1 == WETH) {
             path = new address[](2);
             path[0] = token0;
             path[1] = token1;
         } else {
             path = new address[](3);
             path[0] = token0;
-            path[1] = WBNB;
+            path[1] = WETH;
             path[2] = token1;
         }
 
-        IUniswapV2Router02(pancakeRouter).swapExactTokensForTokens(
+        IUniswapV2Router02(uniswapRouter).swapExactTokensForTokens(
             amount0,
             amount1,
             path,

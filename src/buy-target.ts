@@ -5,7 +5,7 @@ import fetch from "cross-fetch";
 
 import abis from "../abis";
 import addresses from "../addresses";
-import Flashswap from "../build/contracts/Flashswap.json";
+import Swapcontract from "../build/contracts/Swapcontract.json";
 
 
 const web3 = new Web3(
@@ -21,8 +21,8 @@ const uniswapRouter = new web3.eth.Contract(
     addresses.uniswapMainnet.router
 );
 
-const flashswap = new web3.eth.Contract(
-    Flashswap.abi,
+const swapContract = new web3.eth.Contract(
+    Swapcontract.abi,
     addresses.flashswapRopsten.address
 );
 
@@ -50,8 +50,7 @@ async function main() {
 
     setInterval(async () => {
         nonce = await web3.eth.getTransactionCount(admin);
-        // gasPrice = await web3.eth.getGasPrice()
-        gasPrice = "2500000010";
+        gasPrice = await web3.eth.getGasPrice()
     }, 1000);
 
     const networkId = await web3.eth.net.getId();
@@ -112,21 +111,20 @@ async function main() {
                 console.log(`${toTokens[j]} price : $${price}`);
                 if (!flag && price > toTokenThreshold[j]) {
                     console.log(`Price is higher than expected. (expected: ${toTokenThreshold[j]})`);
-                    const deadline = Math.floor(Date.now() / 1000) + 60 * 10;
-                    const tx = uniswapRouter.methods.swapExactETHForTokens(
-                        amount1,
-                        [WETH, toToken[j]],
-                        process.env.WALLET_ADDRESS as string,
-                        deadline
+                    const tx = swapContract.methods.startSwap(
+                        WETH,
+                        toToken[j],
+                        amount0,
+                        amount1
                     )
                     const data = tx.encodeABI();
                     const txData = {
-                        gas: 500000,
+                        gasLimit: 244155,
+                        gas: gasPrice,
                         from: admin,
-                        to: addresses.uniswapMainnet.router,
+                        to: addresses.flashswapRopsten.address,
                         data,
                         nonce: nonce,
-                        value: await web3.utils.toWei(amount, 'ether')
                     }
                     try {
                         console.log(`[${block.number}] [${new Date().toLocaleString()}] : sending transactions...`, JSON.stringify(txData))
@@ -139,7 +137,7 @@ async function main() {
                         console.error('transaction error', e);
                     }
                 }
-                else{
+                else {
                     console.log(`Price is lower than expected. (expected: ${toTokenThreshold[j]})`);
                 }
             }
