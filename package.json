@@ -24,6 +24,8 @@
         "buy:prod": "ts-node src/buy-target.ts",
         "sell:dev": "ts-node-dev --poll --respawn --transpile-only src/sell-target.ts --trace-sync-io",
         "sell:prod": "ts-node src/sell-target.ts",
+        "buy-uniswap:dev": "ts-node-dev --poll --respawn --transpile-only src/buy-target-uniswap.ts --trace-sync-io",
+        "sell-uniswap:dev": "ts-node-dev --poll --respawn --transpile-only src/sell-target-uniswap.ts --trace-sync-io",
         "lint": "eslint \"{src,test}/**/*.ts\" --fix",
         "prettier": "prettier --write --config .prettierrc \"{src,test}/**/*.ts\"",
         "build": "tsc",
