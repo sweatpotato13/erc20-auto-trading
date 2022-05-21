@@ -69,9 +69,9 @@ async function main() {
                     pairAddress
                 );
 
-                const unit0 = await new BigNumber(targetTokens[j].amount);
+                const unit0 = await new BigNumber(targetTokens[j].sellAmount);
                 const amount0 = await new BigNumber(unit0).shiftedBy(parseInt(targetTokens[j].decimals));
-                console.log(`Input amount of ${targetTokens[j].amount}: ${unit0.toString()}`);
+                console.log(`Input amount of ${targetTokens[j].sellAmount}: ${unit0.toString()}`);
 
                 const reserve = await uniswapPair.methods.getReserves().call();
                 const token0 = await uniswapPair.methods.token0().call();
@@ -118,33 +118,33 @@ async function main() {
                 if (!flag[j] && price > parseFloat(targetTokens[j].threshold)) {
                     nonce = await web3.eth.getTransactionCount(admin);
                     console.log(`Price is higher than expected. Try to Sell (expected: ${targetTokens[j].threshold})`);
-                    // const deadline = Math.floor(Date.now() / 1000) + 60 * 10;
-                    // const tx = uniswapRouter.methods.swapExactTokensForETHSupportingFeeOnTransferTokens(
-                    //     amount0,
-                    //     new BigNumber("0"),
-                    //     [targetTokens[j].tokenContract, WETH],
-                    //     process.env.WALLET_ADDRESS as string,
-                    //     deadline
-                    // )
-                    // const data = tx.encodeABI();
-                    // const txData = {
-                    //     gasLimit: 240000,
-                    //     gas: targetToken[j].gasPrice,
-                    //     from: admin,
-                    //     to: addresses.uniswapMainnet.router,
-                    //     data,
-                    //     nonce: nonce,
-                    // }
-                    // try {
-                    //     console.log(`[${block.number}] [${new Date().toLocaleString()}] : sending transactions...`, JSON.stringify(txData))
-                    //     flag[j] = true;
-                    //     const receipt = await web3.eth.sendTransaction(txData);
-                    //     flag[j] = false;
-                    //     console.log(receipt);
-                    // } catch (e) {
-                    //     flag[j] = false;
-                    //     console.error('transaction error', e);
-                    // }
+                    const deadline = Math.floor(Date.now() / 1000) + 60 * 10;
+                    const tx = uniswapRouter.methods.swapExactTokensForETHSupportingFeeOnTransferTokens(
+                        amount0,
+                        new BigNumber("0"),
+                        [targetTokens[j].tokenContract, WETH],
+                        process.env.WALLET_ADDRESS as string,
+                        deadline
+                    )
+                    const data = tx.encodeABI();
+                    const txData = {
+                        gasLimit: 240000,
+                        gas: targetTokens[j].gasPrice,
+                        from: admin,
+                        to: addresses.uniswapMainnet.router,
+                        data,
+                        nonce: nonce,
+                    }
+                    try {
+                        console.log(`[${block.number}] [${new Date().toLocaleString()}] : sending transactions...`, JSON.stringify(txData))
+                        flag[j] = true;
+                        const receipt = await web3.eth.sendTransaction(txData);
+                        flag[j] = false;
+                        console.log(receipt);
+                    } catch (e) {
+                        flag[j] = false;
+                        console.error('transaction error', e);
+                    }
                 }
                 else {
                     console.log(`Price is lower than expected. (expected: ${targetTokens[j].threshold})`);
