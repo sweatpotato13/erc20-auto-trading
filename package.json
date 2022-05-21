@@ -20,12 +20,10 @@
         "test:cov": "jest --coverage",
         "truffle:build": "truffle compile",
         "start:testnet": "truffle migrate --network mainnet",
-        "buy:dev": "ts-node-dev --poll --respawn --transpile-only src/buy-target.ts --trace-sync-io",
-        "buy:prod": "ts-node src/buy-target.ts",
-        "sell:dev": "ts-node-dev --poll --respawn --transpile-only src/sell-target.ts --trace-sync-io",
-        "sell:prod": "ts-node src/sell-target.ts",
-        "buy-uniswap:dev": "ts-node-dev --poll --respawn --transpile-only src/buy-target-uniswap.ts --trace-sync-io",
-        "sell-uniswap:dev": "ts-node-dev --poll --respawn --transpile-only src/sell-target-uniswap.ts --trace-sync-io",
+        "buy:dev": "ts-node-dev --poll --respawn --transpile-only src/buy/buy.ts --trace-sync-io",
+        "buy:prod": "ts-node src/buy/buy.ts",
+        "sell:dev": "ts-node-dev --poll --respawn --transpile-only src/sell/sell.ts --trace-sync-io",
+        "sell:prod": "ts-node src/sell/sell.ts",
         "lint": "eslint \"{src,test}/**/*.ts\" --fix",
         "prettier": "prettier --write --config .prettierrc \"{src,test}/**/*.ts\"",
         "build": "tsc",
@@ -46,9 +44,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged",
-            "prepare-commit-msg": "devmoji -e",
-            "commit-msg": "if git-branch-is dev; then commitlint -E HUSKY_GIT_PARAMS; fi"
+            "pre-commit": "lint-staged"
         }
     },
     "author": "Cute_Wisp <sweatpotato13@gmail.com>",
@@ -60,7 +56,7 @@
         "@types/node": "^17.0.17",
         "@typescript-eslint/eslint-plugin": "^5.11.0",
         "@typescript-eslint/parser": "^5.11.0",
-        "devmoji": "^2.3.0",
+        "csvtojson": "^2.0.10",
         "dot-json": "^1.2.2",
         "eslint": "^8.8.0",
         "eslint-config-prettier": "^8.3.0",
@@ -88,7 +84,7 @@
             "/dist/"
         ]
     },
-    "packageManager": "yarn@3.1.1",
+    "packageManager": "yarn@3.2.0",
     "dependencies": {
         "@truffle/hdwallet-provider": "^2.0.4",
         "bignumber.js": "^9.0.2",
