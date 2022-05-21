@@ -12,11 +12,11 @@ const web3 = new Web3(
 );
 
 const uniswapFactory = new web3.eth.Contract(
-    abis.uniswapFactory.uniswapFactory,
+    abis.uniswapFactory.uniswapFactory as any,
     addresses.uniswapMainnet.factory
 );
 const uniswapRouter = new web3.eth.Contract(
-    abis.uniswapRouter.uniswapRouter,
+    abis.uniswapRouter.uniswapRouter as any,
     addresses.uniswapMainnet.router
 );
 
@@ -57,7 +57,7 @@ async function main() {
             const ethUsd = parseFloat((await object.json()).lprice);
             for (let j = 0; j < targetTokens.length; j++) {
                 const tokenContract = new web3.eth.Contract(
-                    abis.erc20,
+                    abis.erc20 as any,
                     targetTokens[j].tokenContract
                 );
 
@@ -65,7 +65,7 @@ async function main() {
                 const pairAddress = await uniswapFactory.methods.getPair(wethToken[0].tokenContract, targetTokens[j].tokenContract).call();
                 console.log(`pairAddress ${wethToken[0].tokenName}/${targetTokens[j].tokenName} is ${pairAddress}`);
                 const uniswapPair = new web3.eth.Contract(
-                    abis.uniswapPair.uniswapPair,
+                    abis.uniswapPair.uniswapPair as any,
                     pairAddress
                 );
 

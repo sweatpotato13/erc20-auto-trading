@@ -18,8 +18,6 @@
     "scripts": {
         "test": "jest",
         "test:cov": "jest --coverage",
-        "truffle:build": "truffle compile",
-        "start:testnet": "truffle migrate --network mainnet",
         "buy:dev": "ts-node-dev --poll --respawn --transpile-only src/buy/buy.ts --trace-sync-io",
         "buy:prod": "ts-node src/buy/buy.ts",
         "sell:dev": "ts-node-dev --poll --respawn --transpile-only src/sell/sell.ts --trace-sync-io",
