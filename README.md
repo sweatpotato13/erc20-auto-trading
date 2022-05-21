@@ -65,18 +65,26 @@
 ### Built With
 
 * [Node.js](https://nodejs.org)
-
+* [Forever](https://www.npmjs.com/package/forever)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-<img src="https://i.imgur.com/q817W1R.png" alt="Logo">
+<img src="https://i.imgur.com/whKZ0tK.png" alt="Logo">
 
 
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+* Install Node.js 
+
+* Install yarn, forever 
+  ```sh
+  npm install -g yarn forever 
+  ```
 
 ### Installation
 
@@ -84,6 +92,14 @@ To get a local copy up and running follow these simple example steps.
    ```sh
    git clone https://github.com/sweatpotato13/erc20-auto-trading.git
    ```
+  
+2. Setup .env & csvs
+
+3. Run the app
+    ```sh
+    forever start -c "yarn sell:dev" ./        
+    forever start -c "yarn buy:dev" ./                                                                           
+    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
